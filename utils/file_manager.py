@@ -1,11 +1,11 @@
 import csv
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Union
 
 from core.models import Plan, Task
 
 
-def save_plan_txt(plan: Plan, filepath: str) -> Path:
+def save_plan_txt(plan: Plan, filepath: Union[str, Path]) -> Path:
     path = Path(filepath)
     lines = [
         f"Objetivo: {plan.goal}",
@@ -26,7 +26,7 @@ def save_plan_txt(plan: Plan, filepath: str) -> Path:
     return path
 
 
-def save_plan_csv(plan: Plan, filepath: str) -> Path:
+def save_plan_csv(plan: Plan, filepath: Union[str, Path]) -> Path:
     path = Path(filepath)
     with path.open("w", encoding="utf-8", newline="") as csvfile:
         writer = csv.writer(csvfile)

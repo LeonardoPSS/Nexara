@@ -1,45 +1,78 @@
-from core.planner import build_action_plan
-from utils.file_manager import format_tasks, save_plan_csv, save_plan_txt
+from pathlib import Path
+
+from core.planner import Planner
+from utils.file_manager import save_plan_csv, save_plan_txt
 
 
-def request_goal() -> str:
-    while True:
-        goal = input("Descreva seu objetivo principal: ").strip()
-        if goal:
-            return goal
-        print("Por favor, insira um objetivo válido.\n")
+def header() -> None:
+    print("=" * 50)
+    print("NEXARA — Sistema de Clareza e Decisão")
+    print("=" * 50)
+    print()
 
 
-def request_output_format() -> str:
-    while True:
-        choice = input("Salvar plano em TXT ou CSV? (txt/csv): ").strip().lower()
-        if choice in {"txt", "csv"}:
-            return choice
-        print("Escolha inválida. Digite 'txt' ou 'csv'.\n")
+def collect_user_input() -> str:
+    print("Respire fundo antes de responder.\n")
+
+    context = input("1) Qual situação ou decisão está ocupando sua mente agora?\n> ")
+    blockers = input("\n2) O que mais te preocupa ou te trava nessa situação?\n> ")
+    desired_outcome = input("\n3) Se isso desse certo, o que mudaria na sua vida?\n> ")
+
+    goal = f"""
+Situação:
+{context}
+
+Bloqueios:
+{blockers}
+
+Intenção:
+{desired_outcome}
+""".strip()
+
+    return goal
+
+
+def show_summary() -> None:
+    print("\n--- Resumo Nexara ---")
+    print(
+        "Você não precisa resolver tudo agora.\n"
+        "O foco é clareza suficiente para dar o próximo passo certo.\n"
+    )
 
 
 def main() -> None:
-    print("\n=== Nexara: Assistente de Planejamento Estratégico ===\n")
-    goal = request_goal()
+    header()
 
-    plan = build_action_plan(goal)
+    goal = collect_user_input()
+    show_summary()
 
-    print("\nIntenções-chave identificadas:")
-    for item in plan.intentions:
-        print(f"- {item}")
+    planner = Planner()
+    plan = planner.create_plan(goal)
 
-    print("\nPlano de ação priorizado:")
-    print(format_tasks(plan.tasks))
+    print("\n--- Plano de Ação Prioritizado ---\n")
+    for idx, task in enumerate(plan.tasks, start=1):
+        print(
+            f"{idx}. {task.description}\n"
+            f"   Impacto: {task.impact} | "
+            f"Esforço: {task.effort} | "
+            f"Prioridade: {task.priority_score}\n"
+        )
 
-    choice = request_output_format()
-    filename = f"plano_nexara.{choice}"
+    output_dir = Path("outputs")
+    output_dir.mkdir(exist_ok=True)
 
-    if choice == "txt":
-        save_plan_txt(plan, filename)
-    else:
-        save_plan_csv(plan, filename)
+    txt_path = save_plan_txt(plan, output_dir / "plano_nexara.txt")
+    csv_path = save_plan_csv(plan, output_dir / "plano_nexara.csv")
 
-    print(f"\nPlano salvo em: {filename}\n")
+    print("--- Arquivos Gerados ---")
+    print(f"- {txt_path}")
+    print(f"- {csv_path}")
+
+    print(
+        "\nLembrete Nexara:\n"
+        "Clareza vem antes da coragem.\n"
+        "Execute o próximo passo, não o plano inteiro."
+    )
 
 
 if __name__ == "__main__":
