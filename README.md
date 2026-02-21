@@ -1,18 +1,16 @@
 # Nexara
 
-Nexara é um assistente inteligente focado em clareza mental, organização de objetivos e tomada de decisão estratégica. O projeto foi pensado para rodar localmente e manter uma arquitetura modular, preparada para evoluir com integrações futuras de IA.
+Nexara é um aplicativo local em Python que atua como assistente de clareza mental, organização de objetivos e tomada de decisão estratégica.
 
-## Visão da arquitetura (antes do código)
-A arquitetura é organizada em camadas simples e desacopladas:
+## Arquitetura
+A aplicação segue arquitetura modular para facilitar evolução e integração futura com APIs de IA:
 
-- **`main.py`**: camada de interface (CLI). Coleta o objetivo, dispara o fluxo e salva o plano.
-- **`core/`**: lógica de negócio pura e testável (análise de intenções, geração de tarefas, priorização e planejamento).
-- **`utils/`**: utilidades transversais, como persistência de arquivos.
+- **`main.py`**: aplicativo CLI (menu, fluxo de interação e orquestração de sessão).
+- **`core/`**: regras de negócio (análise de intenções, geração de tarefas, priorização e planejamento).
+- **`utils/`**: utilitários de persistência e formatação de saída.
 
-Cada módulo do `core` tem responsabilidade única e comunicação por dados simples (dataclasses). Isso facilita testes, manutenção e a futura substituição de heurísticas por modelos de IA sem alterar a interface.
-
-## Estrutura do projeto
-```
+## Estrutura
+```text
 Nexara/
 ├── main.py
 ├── core/
@@ -27,18 +25,19 @@ Nexara/
 ```
 
 ## Instalação
-1. Tenha Python 3.10+ instalado.
-2. Clone o repositório e execute:
+1. Garanta Python 3.10+.
+2. Execute localmente:
    ```bash
    python main.py
    ```
 
-## Uso
-1. Informe um objetivo principal.
-2. O Nexara irá extrair intenções, criar subtarefas, priorizar e gerar um plano.
-3. Escolha salvar o plano em TXT ou CSV.
+## Como usar
+1. Abra o aplicativo e selecione **Criar novo plano estratégico**.
+2. Responda às 3 perguntas da Nexara (situação, bloqueios e intenção).
+3. Veja o plano priorizado na tela.
+4. Consulte os arquivos gerados automaticamente em `outputs/` (TXT e CSV com timestamp).
 
-## Próximos passos (futuras integrações)
-- Substituir heurísticas por modelos de IA (ex.: APIs de LLM).
-- Persistência em banco local.
-- Interface gráfica ou web.
+## Evoluções sugeridas
+- Conectar a análise de intenções a um modelo de linguagem (LLM).
+- Adicionar histórico persistente de sessões.
+- Expor API HTTP para integração com front-end.
